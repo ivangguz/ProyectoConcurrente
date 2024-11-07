@@ -1,3 +1,4 @@
+import json
 import aiohttp_jinja2
 import jinja2
 import aiofiles
@@ -29,12 +30,23 @@ async def handle_equipos_original(request):
     except Exception as e:
         return web.Response(text=f"Error: {str(e)}", status=500)
 
+# Handler to update equipos data
+async def handle_update_equipos(request):
+    try:
+        data = await request.json()
+        async with aiofiles.open('./static/equipos.json', mode='w') as file:
+            await file.write(json.dumps(data, indent=4))  # Ensure the data is correctly formatted
+        return web.Response(text="Datos actualizados correctamente", content_type='application/json')
+    except Exception as e:
+        return web.Response(text=f"Error: {str(e)}", status=500)
+
 # Register routes
 app.router.add_get('/', handle_index)
 app.router.add_get('/calendario', handle_calendario)
 app.router.add_get('/registrarJornadas', handle_registrar_jornadas)
 app.router.add_get('/equipos', handle_equipos)  # New route to fetch equipos data
 app.router.add_get('/equipos_original', handle_equipos_original)  # New route to fetch equipos data
+app.router.add_post('/updateEquipos', handle_update_equipos)
 app.router.add_static('/static/', path='./static')
 
 # Start the server
