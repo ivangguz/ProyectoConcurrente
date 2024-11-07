@@ -1,6 +1,6 @@
 // Función para mostrar los equipos en una tabla
 function mostrarEquipos() {
-    fetch('static/equipos.json') // Obtener los datos de equipos desde el archivo equipos.json
+    fetch('/equipos')  // Now fetching from the new server route
         .then((response) => response.json())
         .then(data => {
             const dataOrdenada = ordenarTabla(data); // Ordenar los equipos
@@ -94,5 +94,3 @@ function ordenarTabla(equipos) {
 
 // Llamar a la función mostrarEquipos cuando la página se cargue
 window.onload = mostrarEquipos;
-
-

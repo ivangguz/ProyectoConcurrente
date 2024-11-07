@@ -1,5 +1,6 @@
 import aiohttp_jinja2
 import jinja2
+import aiofiles
 from aiohttp import web
 from handlers import handle_index, handle_calendario, handle_registrar_jornadas
 
@@ -7,10 +8,25 @@ from handlers import handle_index, handle_calendario, handle_registrar_jornadas
 app = web.Application()
 aiohttp_jinja2.setup(app, loader=jinja2.FileSystemLoader('templates'))
 
+# Read the JSON file asynchronously
+async def read_json_file(path):
+    async with aiofiles.open(path, mode='r') as file:
+        content = await file.read()
+        return content
+
+# Handler to serve the equipos data
+async def handle_equipos(request):
+    try:
+        equipos_data = await read_json_file('./static/equipos.json')  # Adjust the path to your json file
+        return web.Response(text=equipos_data, content_type='application/json')
+    except Exception as e:
+        return web.Response(text=f"Error: {str(e)}", status=500)
+
 # Register routes
 app.router.add_get('/', handle_index)
-app.router.add_get('/calendario', handle_calendario)  # Ensure this route exists
+app.router.add_get('/calendario', handle_calendario)
 app.router.add_get('/registrarJornadas', handle_registrar_jornadas)
+app.router.add_get('/equipos', handle_equipos)  # New route to fetch equipos data
 app.router.add_static('/static/', path='./static')
 
 # Start the server
