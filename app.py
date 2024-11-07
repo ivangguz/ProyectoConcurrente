@@ -21,12 +21,20 @@ async def handle_equipos(request):
         return web.Response(text=equipos_data, content_type='application/json')
     except Exception as e:
         return web.Response(text=f"Error: {str(e)}", status=500)
+    
+async def handle_equipos_original(request):
+    try:
+        equipos_data = await read_json_file('./static/equipos_original.json')  # Adjust the path to your json file
+        return web.Response(text=equipos_data, content_type='application/json')
+    except Exception as e:
+        return web.Response(text=f"Error: {str(e)}", status=500)
 
 # Register routes
 app.router.add_get('/', handle_index)
 app.router.add_get('/calendario', handle_calendario)
 app.router.add_get('/registrarJornadas', handle_registrar_jornadas)
 app.router.add_get('/equipos', handle_equipos)  # New route to fetch equipos data
+app.router.add_get('/equipos_original', handle_equipos_original)  # New route to fetch equipos data
 app.router.add_static('/static/', path='./static')
 
 # Start the server
