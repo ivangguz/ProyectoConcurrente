@@ -254,34 +254,39 @@ function generarRoundRobinCalendario(teams) {
 }
 
 // Deshabilitar el botón de habilitar botones inicialmente
-document.getElementById('habilitarBotones').disabled = true;
+document.getElementById('habilitarBotones').disabled = false;
 
 // Función para reiniciar la tabla
 document.getElementById('reiniciarTabla').addEventListener('click', reiniciarTabla);
+
 function reiniciarTabla() {
-    fetch('/equipos_original')
-        .then(response => response.json())
-        .then(data => {
-            fetch('/updateEquipos', {
-                method: 'PUT', // Usar PUT para sobrescribir el archivo
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('Tabla reiniciada correctamente.');
-                        // Habilitar el botón de habilitar botones después de reiniciar la tabla
-                        document.getElementById('habilitarBotones').disabled = false;
-                    } else {
-                        console.error('Error al reiniciar la tabla.');
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-        })
-        .catch(error => console.error('Error al leer equipos_original.json:', error));
+    fetch('/reiniciarTabla', {
+        method: 'POST', // Enviar una solicitud POST al servidor para reiniciar la tabla
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            return response.json();  // Analizar la respuesta como JSON si la solicitud fue exitosa
+        } else {
+            throw new Error('Error al reiniciar la tabla');  // Lanzar error si la respuesta no es ok
+        }
+    })
+    .then(data => {
+        if (data.message) {
+            console.log(data.message);  // Mostrar mensaje de éxito
+            // Habilitar el botón después de reiniciar la tabla
+            document.getElementById('habilitarBotones').disabled = false;
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);  // Mostrar cualquier error
+    });
 }
+
+
+
 
 // Función para habilitar todos los botones de guardar y resetear inputs
 function habilitarBotones() {
