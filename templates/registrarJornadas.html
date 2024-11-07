@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Jornadas</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>{{ message }}</h1>
+    <nav>
+        <ul>
+            <li><a href="/">Inicio</a></li>
+            <li><a href="/calendario">Calendario</a></li>
+            <li><a href="/registrarJornadas">Registrar Jornadas</a></li>
+        </ul>
+    </nav>
+    <p>Formulario para registrar tus jornadas.</p>
+    <form>
+        <label for="jornada">Nombre de la jornada:</label>
+        <input type="text" id="jornada" name="jornada">
+        <button type="submit">Registrar</button>
+    </form>
+    <script src="/static/script.js"></script>
+</body>
+</html>
